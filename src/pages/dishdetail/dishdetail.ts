@@ -1,8 +1,9 @@
 import { Component, Inject } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, ActionSheetController, ModalController } from 'ionic-angular';
 import { Dish } from '../../shared/dish';
 import { Comment } from '../../shared/comment';
 import { FavoriteProvider } from '../../providers/favorite/favorite';
+import { CommentPage } from '../../pages/comment/comment';
 
 /**
  * Generated class for the DishdetailPage page.
@@ -27,7 +28,9 @@ export class DishdetailPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
     @Inject('BaseURL') private BaseURL,
     private toastCrtl: ToastController,
-    private favoriteservice: FavoriteProvider) {
+    private favoriteservice: FavoriteProvider,
+    private actionSheetCtrl: ActionSheetController,
+    public modalCtrl: ModalController) {
 
       this.dish = navParams.get('dish');
       this.favorite = this.favoriteservice.isFavorite(this.dish.id);
@@ -51,5 +54,44 @@ export class DishdetailPage {
       duration: 3000
     }).present();
   }
+
+  presentActionSheet() {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Modify your album',
+      buttons: [
+        {
+          text: 'Add to Favorites',
+          handler: () => {
+            this.addToFavorites();
+          }
+        },{
+          text: 'Add a Comment',
+          handler: () => {
+            console.log('Add a Comment');
+            this.openComment();
+          }
+        },{
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    actionSheet.present();
+  }
+
+  openComment() {
+    let modal = this.modalCtrl.create(CommentPage);
+    console.log('create');
+    modal.onDidDismiss( comment => {
+      if (!comment) return;
+      this.dish.comments.push(comment);
+    });
+    console.log('evento');
+    modal.present();
+  }
+
 
 }
