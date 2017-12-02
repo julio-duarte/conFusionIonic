@@ -48,14 +48,15 @@ export class RegisterPage {
   getPicture() {
     const options: CameraOptions = {
       quality: 100,
-      targetHeight: 100,
-      targetWidth: 100,
+      // targetHeight: 100,
+      // targetWidth: 100,
       correctOrientation: true,
       allowEdit: true,
       destinationType: this.camera.DestinationType.FILE_URI,
       encodingType: this.camera.EncodingType.PNG,
       mediaType: this.camera.MediaType.PICTURE,
-      cameraDirection: this.camera.Direction.FRONT
+      cameraDirection: this.camera.Direction.FRONT,
+      saveToPhotoAlbum: true
     };
 
     this.camera.getPicture(options)
